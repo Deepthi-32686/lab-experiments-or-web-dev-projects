@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Registration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Event Registration</h1>
+        <p class="note">Please fill all * mandatory fields.</p>
+
+        <form class="form-box">
+
+            <h2>Event Registration Form</h2>
+
+            <label>Name *</label>
+            <input type="text" required>
+
+            <label>Email *</label>
+            <input type="email" required>
+
+            <label>Phone *</label>
+            <input type="tel" required>
+
+            <label>Event Type *</label>
+            <select required>
+                <option>-- Select Type --</option>
+                <option>Workshop</option>
+                <option>Seminar</option>
+                <option>Tech Event</option>
+                <option>Cultural Event</option>
+            </select>
+
+            <label>Mode of Attendance *</label>
+            <div class="box">
+                <input type="radio" name="mode" required> Online
+                <input type="radio" name="mode" required> Offline
+            </div>
+
+            <label>Date *</label>
+            <input type="date" required>
+
+            <label>Seats *</label>
+            <input type="number" min="1" required>
+
+           <div style="display: flex; align-items: center; ">
+    <input type="checkbox" name="terms" required>
+    <label>I agree to terms</label>
+     </div>
+
+            <div class="btn-group">
+                <button type="submit" class="submit-btn">Submit</button>
+                <button type="reset" class="reset-btn">Reset</button>
+            </div>
+
+        </form>
+
+    </div>
+
+</body>
+</html>

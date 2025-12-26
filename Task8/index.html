@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Bookstore</title>
+
+<style>
+/* -------------------- GLOBAL BACKGROUND -------------------- */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(120deg, #dff1ff, #f9e6ff, #fff4d9);
+    min-height: 100vh;
+    transition: background 0.3s ease;
+}
+
+/* Dark mode background */
+.dark {
+    background: radial-gradient(circle at top, #1e1e1e, #000000);
+    color: white;
+}
+
+/* -------------------- HEADER -------------------- */
+header {
+    padding: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.container {
+    width: 90%;
+    margin: auto;
+}
+
+/* -------------------- ADD BOOK FORM -------------------- */
+#addBookForm {
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    width: 100%;
+    margin-bottom: 20px;
+    box-shadow: 0px 5px 20px rgba(0,0,0,0.1);
+}
+
+.dark #addBookForm {
+    background: #222;
+    color: white;
+}
+
+input {
+    width: 250px;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid gray;
+    margin-bottom: 8px;
+}
+
+button {
+    padding: 8px 15px;
+    background: #0077ff;
+    color: white;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+/* -------------------- BOOK CARD -------------------- */
+.book-card {
+    padding: 20px;
+    background: linear-gradient(135deg, #ffffffaa, #dceaffaa);
+    border-radius: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0px 5px 20px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.dark .book-card {
+    background: linear-gradient(135deg, #333, #111);
+}
+
+.price-tag {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #444;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+}
+
+/* Remove button */
+.remove-btn {
+    background: #ff4b4b;
+    padding: 8px 12px;
+    border-radius: 10px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>📚 Interactive Bookstore</header>
+
+<div class="container">
+
+    <input type="text" id="search" placeholder="Search books..." onkeyup="renderBooks()">
+
+    <select id="sortSelect" onchange="renderBooks()">
+        <option value="price">Sort by Price</option>
+        <option value="rating">Sort by Rating</option>
+    </select>
+
+    <button onclick="toggleDarkMode()">🌙 Dark Mode</button>
+
+    <br><br>
+
+    <!-- ---------------- ADD NEW BOOK ---------------- -->
+    <div id="addBookForm">
+        <h3>Add New Book</h3>
+
+        <input id="title" placeholder="Book Title"><br>
+        <input id="author" placeholder="Author Name"><br>
+        <input id="price" type="number" placeholder="Price (₹)"><br>
+        <input id="rating" type="number" placeholder="Rating (1-5)" min="1" max="5"><br>
+
+        <button onclick="addBook()">Add Book</button>
+    </div>
+
+    <!-- ---------------- BOOK LIST ---------------- -->
+    <div id="bookList"></div>
+
+</div>
+
+<script>
+let books = [
+    { title: "Atomic Habits", author: "James Clear", price: 499, rating: 4.8 },
+    { title: "Deep Work", author: "Cal Newport", price: 349, rating: 4.5 }
+];
+
+// ---------------- ADD BOOK ----------------
+function addBook() {
+    let t = title.value.trim();
+    let a = author.value.trim();
+    let p = Number(price.value);
+    let r = Number(rating.value);
+
+    if (!t || !a || !p || !r) {
+        alert("Please fill all fields");
+        return;
+    }
+
+    books.push({ title: t, author: a, price: p, rating: r });
+
+    title.value = "";
+    author.value = "";
+    price.value = "";
+    rating.value = "";
+
+    renderBooks();
+}
+
+// ---------------- REMOVE BOOK ----------------
+function removeBook(index) {
+    books.splice(index, 1);
+    renderBooks();
+}
+
+// ---------------- DARK MODE ----------------
+function toggleDarkMode() {
+    document.body.classList.toggle("dark");
+}
+
+// ---------------- RENDER BOOKS ----------------
+function renderBooks() {
+    let searchText = search.value.toLowerCase();
+    let sortType = sortSelect.value;
+
+    let filtered = books.filter(b =>
+        b.title.toLowerCase().includes(searchText)
+    );
+
+    if (sortType === "price") filtered.sort((a, b) => a.price - b.price);
+    if (sortType === "rating") filtered.sort((a, b) => b.rating - a.rating);
+
+    bookList.innerHTML = "";
+
+    filtered.forEach((b, i) => {
+        bookList.innerHTML += `
+            <div class="book-card">
+                <h3>${b.title}</h3>
+                <p>${b.author}</p>
+                ⭐ ${b.rating}
+                <div class="price-tag">₹${b.price}</div>
+                <br>
+                <button class="remove-btn" onclick="removeBook(${i})">Remove</button>
+            </div>
+        `;
+    });
+}
+
+renderBooks();
+</script>
+
+</body>
+</html> (task 7)

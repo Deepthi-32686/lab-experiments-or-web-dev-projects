@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Weather App</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(135deg, #3F2B96, #24C6DC);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 600px;
+            background: rgba(0, 0, 0, 0.65);
+            padding: 40px;
+            border-radius: 25px;
+            color: white;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.4);
+        }
+
+        .container h2 {
+            margin-bottom: 5px;
+            font-size: 30px;
+        }
+
+        .sub {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 25px;
+        }
+
+        .input-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 15px;
+            font-size: 17px;
+            border: none;
+            border-radius: 12px;
+            outline: none;
+        }
+
+        .input-box button {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 12px;
+            background: #ffeb3b;
+            color: #333;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .input-box button:hover {
+            background: #f3d400;
+        }
+
+        .tip {
+            background: rgba(255,255,255,0.1);
+            padding: 12px;
+            margin-top: 20px;
+            font-size: 14px;
+            border-left: 4px solid #ffeb3b;
+            border-radius: 8px;
+        }
+
+        #result {
+            margin-top: 25px;
+            font-size: 18px;
+            line-height: 1.7;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Live Weather</h2>
+        <p class="sub">Auto-detects your location + manual search</p>
+
+        <div class="input-box">
+            <input type="text" id="city" placeholder="Enter city name (optional)">
+            <button id="checkBtn">Check</button>
+        </div>
+
+        <p class="tip">
+            Tip: Leave the box empty and the app will show your live location weather automatically.
+        </p>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const result = document.getElementById("result");
+
+        function weatherDescription(code) {
+            const codes = {
+                0: "Clear sky",
+                1: "Mainly clear",
+                2: "Partly cloudy",
+                3: "Overcast",
+                45: "Foggy",
+                48: "Depositing rime fog",
+                51: "Light drizzle",
+                53: "Moderate drizzle",
+                55: "Dense drizzle",
+                61: "Light rain",
+                63: "Moderate rain",
+                65: "Heavy rain",
+                71: "Light snow",
+                73: "Moderate snow",
+                75: "Heavy snow",
+                95: "Thunderstorm"
+            };
+            return codes[code] || "Unknown";
+        }
+
+        function getWeather(lat, lon, place = "Your Location") {
+            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
+                .then(res => res.json())
+                .then(data => {
+                    const w = data.current_weather;
+                    result.innerHTML = `
+                        <h3>Weather in ${place}</h3>
+                        <p><b>Temperature:</b> ${w.temperature}°C</p>
+                        <p><b>Wind Speed:</b> ${w.windspeed} km/h</p>
+                        <p><b>Condition:</b> ${weatherDescription(w.weathercode)}</p>
+                        <p><b>Time:</b> ${w.time}</p>
+                    `;
+                })
+                .catch(() => {
+                    result.innerHTML = "<p>Failed to fetch weather data.</p>";
+                });
+        }
+
+        // Manual Search
+        document.getElementById("checkBtn").addEventListener("click", () => {
+            const city = document.getElementById("city").value.trim();
+
+            if (city === "") {
+                result.innerHTML = "<p>Detecting your live weather...</p>";
+                getLiveWeather();
+                return;
+            }
+
+            fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.results || data.results.length === 0) {
+                        result.innerHTML = "<p>City not found.</p>";
+                        return;
+                    }
+
+                    const place = data.results[0].name;
+                    const { latitude, longitude } = data.results[0];
+                    getWeather(latitude, longitude, place);
+                })
+                .catch(() => {
+                    result.innerHTML = "<p>Error searching for city.</p>";
+                });
+        });
+
+        function getLiveWeather() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    const lat = pos.coords.latitude;
+                    const lon = pos.coords.longitude;
+                    getWeather(lat, lon);
+                }, () => {
+                    result.innerHTML = "<p>Location access denied. Please enter a city manually.</p>";
+                });
+            }
+        }
+
+        window.onload = getLiveWeather;
+    </script>
+
+</body>
+</html>

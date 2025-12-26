@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Shop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛍️ Mini Shop</h1>
+            <div class="cart-icon">
+                <span class="material-icons">🛒</span>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- Products Section -->
+            <section class="products-section">
+                <h2>Products</h2>
+                <div class="products-grid" id="productsGrid">
+                    <!-- Products will be dynamically added here -->
+                </div>
+            </section>
+
+            <!-- Cart Section -->
+            <section class="cart-section">
+                <h2>Shopping Cart</h2>
+                <div class="cart-items" id="cartItems">
+                    <p class="empty-cart">Your cart is empty</p>
+                </div>
+                <div class="cart-summary">
+                    <div class="total">
+                        <span>Total:</span>
+                        <span class="total-amount" id="totalAmount">$0.00</span>
+                    </div>
+                    <button class="checkout-btn" id="checkoutBtn" disabled>
+                        Checkout
+                    </button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="success-icon">✓</div>
+            <h2>Order Successful!</h2>
+            <p>Thank you for your purchase!</p>
+            <p class="order-total">Total: <span id="orderTotal"></span></p>
+            <button class="close-modal" id="closeModal">Continue Shopping</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

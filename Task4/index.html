@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simple Theme Demo (SCSS Variables)</title>
+
+<style>
+/* -------------------- */
+/* THEME VARIABLES      */
+/* -------------------- */
+:root {
+    --bg-color: #f5f7fa;
+    --card-bg: #ffffff;
+    --text-color: #222;
+    --shadow: 0 4px 20px rgba(0,0,0,0.07);
+}
+
+[data-theme="dark"] {
+    --bg-color: #0e1117;
+    --card-bg: #1c212b;
+    --text-color: #e5e5e5;
+    --shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+/* -------------------- */
+/* GLOBAL STYLE         */
+/* -------------------- */
+body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    transition: background 0.25s ease, color 0.25s ease;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+/* -------------------- */
+/* HEADER               */
+/* -------------------- */
+header h1 {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+}
+
+header p {
+    opacity: 0.8;
+}
+
+.theme-btn {
+    float: right;
+    background: white;
+    border: 1px solid #ddd;
+    padding: 10px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+[data-theme="dark"] .theme-btn {
+    background: #1c212b;
+    color: var(--text-color);
+    border: 1px solid #444;
+}
+
+.theme-btn:hover {
+    transform: scale(1.03);
+}
+
+/* -------------------- */
+/* CARD LAYOUT          */
+/* -------------------- */
+.cards {
+    display: flex;
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.card {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 15px;
+    width: 100%;
+    box-shadow: var(--shadow);
+    transition: background 0.25s ease, color 0.25s ease;
+}
+
+/* -------------------- */
+/* FOOTER               */
+/* -------------------- */
+footer {
+    margin-top: 50px;
+    opacity: 0.7;
+    display: flex;
+    justify-content: space-between;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <button class="theme-btn" id="themeToggle">Switch to Dark</button>
+
+    <header>
+        <h1>Simple Theme Demo (SCSS Variables)</h1>
+        <p>This layout switches between Light and Dark themes using CSS Variables.</p>
+    </header>
+
+    <div class="cards">
+        <div class="card">
+            <h3>Card 1</h3>
+            <p>Each card adapts colors from theme variables.</p>
+        </div>
+
+        <div class="card">
+            <h3>Card 2</h3>
+            <p>Light mode uses bright background and dark text.</p>
+        </div>
+
+        <div class="card">
+            <h3>Card 3</h3>
+            <p>Dark mode uses dark background and light text.</p>
+        </div>
+    </div>
+
+    <footer>
+        <span>© Simple Theme Layout</span>
+        <a href="#">Welcome!</a>
+    </footer>
+</div>
+
+<script>
+/* -------------------------------- */
+/* THEME SWITCH LOGIC               */
+/* -------------------------------- */
+const toggleBtn = document.getElementById("themeToggle");
+
+toggleBtn.addEventListener("click", () => {
+    const isDark = document.body.getAttribute("data-theme") === "dark";
+
+    document.body.setAttribute("data-theme", isDark ? "light" : "dark");
+    toggleBtn.textContent = isDark ? "Switch to Dark" : "Switch to Light";
+});
+
+// Set default theme
+document.body.setAttribute("data-theme", "light");
+</script>
+
+</body>
+</html>
